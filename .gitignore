@@ -1,0 +1,12 @@
+# OS / editor noise — never commit these
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Local verification artifacts
+*.log

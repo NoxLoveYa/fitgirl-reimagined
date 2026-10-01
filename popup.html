@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  :root { color-scheme: light dark; }
+  body {
+    width: 300px; margin: 0; padding: 16px;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, system-ui, sans-serif;
+    background: Canvas; color: CanvasText;
+  }
+  h1 { font-size: 17px; font-weight: 700; letter-spacing: -.2px; margin: 0 0 4px; }
+  h1 span { color: AccentColor; }
+  p { font-size: 13px; line-height: 1.5; opacity: .75; }
+  button, a.btn {
+    display: block; width: 100%; box-sizing: border-box; margin-top: 8px; padding: 0 12px; min-height: 40px;
+    line-height: 40px; border-radius: 10px; border: 0;
+    background: GrayText; background: color-mix(in srgb, GrayText 16%, transparent);
+    color: CanvasText; cursor: pointer; text-align: center; text-decoration: none;
+    font-size: 13px; font-weight: 600; font-family: inherit;
+  }
+  button.primary { background: AccentColor; color: white; }
+  .row { display: flex; gap: 8px; margin-top: 8px; }
+  .row > * { flex: 1; margin-top: 0; }
+  .row button.on { background: AccentColor; color: white; }
+  .label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; opacity: .6; margin: 12px 0 0; }
+  small { opacity: .6; }
+</style>
+</head>
+<body>
+  <h1>FitGirl <span>Reimagined</span></h1>
+  <p>Clean overlay for fitgirl-repacks.site. Toggle, search with <b>/</b>, filter by genre, copy magnets.</p>
+  <button id="toggle" class="primary">Toggle overlay</button>
+  <p class="label">Layout</p>
+  <div class="row">
+    <button id="grid">Grid</button>
+    <button id="list">List</button>
+  </div>
+  <p class="label">Appearance</p>
+  <div class="row">
+    <button data-theme-opt="system">Auto</button>
+    <button data-theme-opt="light">Light</button>
+    <button data-theme-opt="dark">Dark</button>
+  </div>
+  <a class="btn" href="https://fitgirl-repacks.site/" target="_blank">Open FitGirl</a>
+  <p><small id="status"></small></p>
+  <script src="popup.js"></script>
+</body>
+</html>

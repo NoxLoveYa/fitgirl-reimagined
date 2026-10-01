@@ -1,0 +1,47 @@
+{
+  "manifest_version": 3,
+  "name": "FitGirl Reimagined",
+  "version": "0.6.0",
+  "description": "Modern, user-friendly front-end overlay for fitgirl-repacks.site — grid, popular rail, instant search, size insights.",
+  "permissions": ["storage"],
+  "host_permissions": ["https://fitgirl-repacks.site/*"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    },
+    "default_title": "FitGirl Reimagined"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://fitgirl-repacks.site/*"],
+      "js": [
+        "js/config.js",
+        "js/util.js",
+        "js/parse.js",
+        "js/store.js",
+        "js/dropdown.js",
+        "js/theme.js",
+        "js/shell.js",
+        "js/render.js",
+        "js/sheet.js",
+        "js/main.js"
+      ],
+      "css": ["reimagined.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["reimagined.css"],
+      "matches": ["https://fitgirl-repacks.site/*"]
+    }
+  ]
+}
