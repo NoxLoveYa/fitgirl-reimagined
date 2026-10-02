@@ -1,4 +1,4 @@
-/* FitGirl Reimagined — details sheet (modal).
+﻿/* FitGirl Reimagined â€” details sheet (modal).
  * Rule R8: the sheet opens instantly in all cases. Same-page posts render
  * immediately; off-page posts show a skeleton that fills in on fetch, with
  * hover-prefetch making most clicks instant. sheetToken discards stale fills.
@@ -45,7 +45,9 @@ function openSheet(html) {
 
 /** @param {Element} modal */
 function wireModal(modal) {
-  modal.querySelector("#fg-r-m-close")?.addEventListener("click", closeModal);
+  const close = modal.querySelector("#fg-r-m-close");
+  close?.addEventListener("click", closeModal);
+  close?.focus();
   modal.querySelectorAll("[data-mag]").forEach((b) => b.addEventListener("click", () => {
     navigator.clipboard?.writeText(b.dataset.mag);
     b.textContent = "Copied";
@@ -53,7 +55,7 @@ function wireModal(modal) {
 }
 
 /**
- * Popular rail click → details sheet, opened instantly.
+ * Popular rail click â†’ details sheet, opened instantly.
  * @param {import("./parse.js").PopularEntry} p
  */
 function openPopular(p) {
@@ -84,7 +86,7 @@ function modalBodyHtml(it) {
   return `
       <div class="fg-r-m-head">
         <div>
-          <div class="fg-r-cat">${escapeHtml(it.cat)}${it.dateShort ? ` · ${escapeHtml(it.dateShort)}` : ""}</div>
+          <div class="fg-r-cat">${escapeHtml(it.cat)}${it.dateShort ? ` Â· ${escapeHtml(it.dateShort)}` : ""}</div>
           <h2>${escapeHtml(it.titleRaw)}</h2>
           <div class="fg-r-m-specs">
             ${it.company ? `<span><b>Studio:</b> ${escapeHtml(it.company)}</span>` : ""}
@@ -95,16 +97,16 @@ function modalBodyHtml(it) {
           </div>
           <div class="fg-r-genres big">${it.genres.map((g) => `<span>${escapeHtml(g)}</span>`).join("")}</div>
         </div>
-        <button id="fg-r-m-close" aria-label="Close dialog">Close</button>
+        <button id="fg-r-m-close" aria-label="Close dialog" title="Close (Esc)">${fgIcon("close")}</button>
       </div>
       <div class="fg-r-m-grid">
         <div>${it.cover ? `<img class="fg-r-m-cover" src="${escapeHtml(it.cover)}" alt="" />` : ""}<p class="fg-r-m-desc">${escapeHtml(it.desc || "")}</p>
         <a class="fg-r-m-open" href="${escapeHtml(it.url)}" target="_blank" rel="noopener">Open full original post (mirrors, install notes)</a></div>
         <div>
           <h4>Torrents / magnets</h4>
-          ${it.magnets.length ? it.magnets.map((m) => `<div class="fg-r-m-row"><span>${escapeHtml(m.label.slice(0, 80))}</span><button data-mag="${escapeHtml(m.href)}">Copy</button> <a href="${escapeHtml(m.href)}">Open</a></div>`).join("") : "<p class='fg-r-muted'>No magnet parsed on list page — open the post.</p>"}
+          ${it.magnets.length ? it.magnets.map((m) => `<div class="fg-r-m-row"><span>${escapeHtml(m.label.slice(0, 80))}</span><button data-mag="${escapeHtml(m.href)}">Copy</button> <a href="${escapeHtml(m.href)}">Open</a></div>`).join("") : "<p class='fg-r-muted'>No magnet parsed on list page â€” open the post.</p>"}
           <h4>Torrent pages</h4>
-          ${it.torrents.length ? it.torrents.map((t) => `<div class="fg-r-m-row"><a href="${escapeHtml(t.href)}" target="_blank" rel="noopener">${escapeHtml(t.label)}</a></div>`).join("") : "<p class='fg-r-muted'>—</p>"}
+          ${it.torrents.length ? it.torrents.map((t) => `<div class="fg-r-m-row"><a href="${escapeHtml(t.href)}" target="_blank" rel="noopener">${escapeHtml(t.label)}</a></div>`).join("") : "<p class='fg-r-muted'>â€”</p>"}
           ${it.screenshots.length ? `<h4>Screenshots</h4><div class="fg-r-m-shots">${it.screenshots.map((s) => `<a href="${escapeHtml(s)}" target="_blank" rel="noopener"><img loading="lazy" src="${escapeHtml(s)}" /></a>`).join("")}</div>` : ""}
         </div>
       </div>`;
@@ -118,11 +120,11 @@ function loadingSheetHtml(p) {
   return `
       <div class="fg-r-m-head">
         <div>
-          <div class="fg-r-cat">Most popular · #${p.rank}</div>
+          <div class="fg-r-cat">Most popular Â· #${p.rank}</div>
           <h2>${escapeHtml(p.title)}</h2>
-          <div class="fg-r-m-specs"><span>Fetching post details…</span></div>
+          <div class="fg-r-m-specs"><span>Fetching post detailsâ€¦</span></div>
         </div>
-        <button id="fg-r-m-close" aria-label="Close dialog">Close</button>
+        <button id="fg-r-m-close" aria-label="Close dialog" title="Close (Esc)">${fgIcon("close")}</button>
       </div>
       <div class="fg-r-m-grid">
         <div>${p.cover ? `<img class="fg-r-m-cover" src="${escapeHtml(p.cover)}" alt="" />` : ""}
@@ -147,10 +149,10 @@ function errorSheetHtml(p) {
   return `
       <div class="fg-r-m-head">
         <div>
-          <div class="fg-r-cat">Most popular · #${p.rank}</div>
+          <div class="fg-r-cat">Most popular Â· #${p.rank}</div>
           <h2>${escapeHtml(p.title)}</h2>
         </div>
-        <button id="fg-r-m-close" aria-label="Close dialog">Close</button>
+        <button id="fg-r-m-close" aria-label="Close dialog" title="Close (Esc)">${fgIcon("close")}</button>
       </div>
       <p class="fg-r-muted">Could not load the post details. Open the original post instead:</p>
       <p><a class="fg-r-m-open" href="${escapeHtml(p.url)}" target="_blank" rel="noopener">Open original post</a></p>`;

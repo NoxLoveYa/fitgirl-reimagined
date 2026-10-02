@@ -19,6 +19,7 @@
  * @property {import("./parse.js").RepackItem[]} items
  * @property {string[]} upcoming
  * @property {import("./parse.js").PopularEntry[]} popular
+ * @property {{prev: string, next: string, page: string}} pager
  * @property {string} siteQuery
  * @property {string[]} allGenres
  */
@@ -39,6 +40,7 @@ function createState() {
     items: [],
     upcoming: [],
     popular: [],
+    pager: { prev: "", next: "", page: "" },
     siteQuery: "",
     allGenres: [],
   };

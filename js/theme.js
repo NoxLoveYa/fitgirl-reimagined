@@ -22,7 +22,8 @@ function applyTheme() {
 }
 
 function syncThemeSeg() {
-  root.querySelectorAll("[data-theme-opt]").forEach((b) =>
-    b.classList.toggle("on", b.dataset.themeOpt === state.theme)
-  );
+  root.querySelectorAll("[data-theme-opt]").forEach((b) => {
+    b.classList.toggle("on", b.dataset.themeOpt === state.theme);
+    b.setAttribute("aria-pressed", String(b.dataset.themeOpt === state.theme));
+  });
 }

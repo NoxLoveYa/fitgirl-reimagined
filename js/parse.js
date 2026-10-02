@@ -205,3 +205,21 @@ function parsePopular() {
     return [];
   }
 }
+
+/**
+ * Prev/next page links from the source page's pagination (never throws).
+ * "next" = older posts on this WordPress site.
+ * @returns {{prev: string, next: string, page: string}}
+ */
+function parsePager() {
+  try {
+    const nav = document.querySelector(".paging-navigation");
+    return {
+      prev: nav?.querySelector("a.prev")?.href || "",
+      next: nav?.querySelector("a.next")?.href || "",
+      page: nav?.querySelector(".page-numbers.current")?.textContent.trim() || "",
+    };
+  } catch {
+    return { prev: "", next: "", page: "" };
+  }
+}

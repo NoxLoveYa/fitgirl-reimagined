@@ -2,7 +2,7 @@
  * Owns the shared DOM refs (root, gridEl, …). Render and sheet fill them in.
  */
 
-let root, gridEl, upcomingEl, popularEl, metaEl, searchInput;
+let root, gridEl, upcomingEl, popularEl, metaEl, pagerEl, searchInput;
 
 function injectShell() {
   // top floating toggle (always visible even when disabled)
@@ -23,44 +23,47 @@ function injectShell() {
   root.id = "fg-r-root";
   root.innerHTML = `
       <header class="fg-r-top">
-        <a class="fg-r-brand" href="${FG_HOME_URL}" title="FitGirl home">
-          <span class="fg-r-logo">FG</span>
-          <span>
+        <div class="fg-r-top-in">
+          <a class="fg-r-brand" href="${FG_HOME_URL}" title="FitGirl home — unofficial front-end for ${FG_HOST}">
+            <span class="fg-r-logo">FG</span>
             <span class="fg-r-title">FitGirl Reimagined</span>
-            <span class="fg-r-sub">Unofficial modern front-end · ${FG_HOST}</span>
-          </span>
-        </a>
-        <div class="fg-r-searchwrap">
-          <span class="fg-r-kbd">/</span>
-          <input id="fg-r-search" type="search" placeholder="Search all repacks… Enter runs site-wide search" autocomplete="off" />
-        </div>
-        <div class="fg-r-controls">
-          <div class="fg-r-dd" id="fg-r-genre-dd">
-            <button class="fg-r-dd-btn" id="fg-r-genre-btn" aria-haspopup="listbox" aria-expanded="false" title="Filter by genre/tag"><span>All genres</span></button>
-            <div class="fg-r-dd-list" id="fg-r-genre-list" role="listbox" aria-label="Filter by genre" hidden></div>
+          </a>
+          <div class="fg-r-searchwrap">
+            ${fgIcon("search")}
+            <input id="fg-r-search" type="search" placeholder="Filter repacks · Enter searches the whole site" aria-label="Search repacks" autocomplete="off" />
+            <kbd class="fg-r-kbd" aria-hidden="true">/</kbd>
           </div>
-          <div class="fg-r-dd" id="fg-r-sort-dd">
-            <button class="fg-r-dd-btn" id="fg-r-sort-btn" aria-haspopup="listbox" aria-expanded="false" title="Sort"><span>Newest</span></button>
-            <div class="fg-r-dd-list" id="fg-r-sort-list" role="listbox" aria-label="Sort" hidden></div>
+          <div class="fg-r-controls">
+            <button id="fg-r-favs" title="Show saved only" aria-pressed="false">${fgIcon("bookmark")}<span>Saved</span><span class="fg-r-count" id="fg-r-favs-n"></span></button>
+            <div class="fg-r-seg" role="group" aria-label="Layout">
+              <button data-view="grid" title="Grid view" aria-label="Grid view">${fgIcon("grid")}</button>
+              <button data-view="list" title="List view" aria-label="List view">${fgIcon("list")}</button>
+            </div>
+            <div class="fg-r-seg" role="group" aria-label="Appearance">
+              <button data-theme-opt="system" title="Follow system appearance" aria-label="Follow system appearance">${fgIcon("auto")}</button>
+              <button data-theme-opt="light" title="Light appearance" aria-label="Light appearance">${fgIcon("sun")}</button>
+              <button data-theme-opt="dark" title="Dark appearance" aria-label="Dark appearance">${fgIcon("moon")}</button>
+            </div>
+            <button id="fg-r-original" title="Show the original site">${fgIcon("external")}<span>Original</span></button>
           </div>
-          <div class="fg-r-seg" role="group" aria-label="Layout">
-            <button data-view="grid" title="Grid view">Grid</button>
-            <button data-view="list" title="List view">List</button>
-          </div>
-          <div class="fg-r-seg" role="group" aria-label="Appearance">
-            <button data-theme-opt="system" title="Follow system appearance">Auto</button>
-            <button data-theme-opt="light" title="Light appearance">Light</button>
-            <button data-theme-opt="dark" title="Dark appearance">Dark</button>
-          </div>
-          <button id="fg-r-favs" title="Show saved only" aria-pressed="false">Saved</button>
-          <button id="fg-r-original" title="Show original site">Original</button>
         </div>
       </header>
-      <div class="fg-r-meta" id="fg-r-meta"></div>
+      <div class="fg-r-filters">
+        <div class="fg-r-dd" id="fg-r-genre-dd">
+          <button class="fg-r-dd-btn" id="fg-r-genre-btn" aria-haspopup="listbox" aria-expanded="false" title="Filter by genre/tag"><span>All genres</span></button>
+          <div class="fg-r-dd-list" id="fg-r-genre-list" role="listbox" aria-label="Filter by genre" hidden></div>
+        </div>
+        <div class="fg-r-dd" id="fg-r-sort-dd">
+          <button class="fg-r-dd-btn" id="fg-r-sort-btn" aria-haspopup="listbox" aria-expanded="false" title="Sort"><span>Newest</span></button>
+          <div class="fg-r-dd-list" id="fg-r-sort-list" role="listbox" aria-label="Sort" hidden></div>
+        </div>
+        <div class="fg-r-meta" id="fg-r-meta" aria-live="polite"></div>
+      </div>
       <div class="fg-r-layout" id="fg-r-layout">
         <div class="fg-r-main">
           <section class="fg-r-upcoming" id="fg-r-upcoming"></section>
           <main class="fg-r-grid" id="fg-r-grid"></main>
+          <nav class="fg-r-pager" id="fg-r-pager" aria-label="Pagination" hidden></nav>
         </div>
         <aside class="fg-r-pop" id="fg-r-pop" aria-label="Most popular repacks"></aside>
       </div>
@@ -68,7 +71,7 @@ function injectShell() {
         <span>Unofficial overlay. All content © FitGirl. Data parsed live from the page — no tracking.</span>
         <span><a href="https://fitgirl-repacks.site/faq/" target="_blank" rel="noopener">FAQ</a> · <a href="https://fitgirl-repacks.site/all-my-repacks-a-z/" target="_blank" rel="noopener">A–Z index</a></span>
       </footer>
-      <div class="fg-r-modal-back" id="fg-r-modal-back" hidden><div class="fg-r-modal" id="fg-r-modal"></div></div>
+      <div class="fg-r-modal-back" id="fg-r-modal-back" hidden><div class="fg-r-modal" id="fg-r-modal" role="dialog" aria-modal="true" aria-label="Repack details"></div></div>
     `;
   document.documentElement.appendChild(root);
 
@@ -77,6 +80,7 @@ function injectShell() {
   upcomingEl = root.querySelector("#fg-r-upcoming");
   popularEl = root.querySelector("#fg-r-pop");
   metaEl = root.querySelector("#fg-r-meta");
+  pagerEl = root.querySelector("#fg-r-pager");
 
   initDropdown(
     "fg-r-genre",
@@ -134,7 +138,10 @@ function injectShell() {
 }
 
 function syncViewSeg() {
-  root.querySelectorAll("[data-view]").forEach((b) => b.classList.toggle("on", b.dataset.view === state.view));
+  root.querySelectorAll("[data-view]").forEach((b) => {
+    b.classList.toggle("on", b.dataset.view === state.view);
+    b.setAttribute("aria-pressed", String(b.dataset.view === state.view));
+  });
   gridEl.classList.toggle("is-list", state.view === "list");
 }
 

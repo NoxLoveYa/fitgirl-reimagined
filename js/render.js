@@ -17,6 +17,7 @@ function collect() {
   }
   state.upcoming = parseUpcoming();
   state.popular = parsePopular();
+  state.pager = parsePager();
   const allGenres = new Set();
   state.items.forEach((i) => i.genres.forEach((g) => allGenres.add(g)));
   state.allGenres = [...allGenres].sort();
@@ -57,6 +58,20 @@ function render() {
   renderPopular();
   renderUpcoming();
   renderGrid(arr);
+  renderPager();
+}
+
+function renderPager() {
+  const p = state.pager;
+  if (!p.prev && !p.next) { pagerEl.hidden = true; pagerEl.innerHTML = ""; return; }
+  const link = (href, side, inner) => href
+    ? `<a class="fg-r-pg" href="${escapeHtml(href)}" rel="${side}">${inner}</a>`
+    : `<span class="fg-r-pg is-off" aria-disabled="true">${inner}</span>`;
+  pagerEl.hidden = false;
+  pagerEl.innerHTML =
+    link(p.prev, "prev", `${fgIcon("arrowL")}Newer`) +
+    (p.page ? `<span class="fg-r-pg-cur">Page ${escapeHtml(p.page)}</span>` : "") +
+    link(p.next, "next", `Older${fgIcon("arrowR")}`);
 }
 
 function renderPopular() {
@@ -143,6 +158,7 @@ function renderGrid(arr) {
   const favBtn = root.querySelector("#fg-r-favs");
   favBtn?.classList.toggle("on", state.onlyFavs);
   favBtn?.setAttribute("aria-pressed", String(state.onlyFavs));
+  root.querySelector("#fg-r-favs-n").textContent = state.favs.size || "";
 
   // direct binding: pages hold ~10 cards, delegation would only add indirection
   gridEl.querySelectorAll("[data-act]").forEach((btn) => {
@@ -172,7 +188,6 @@ function renderGrid(arr) {
  */
 function cardHtml(it) {
   const isFav = state.favs.has(it.id);
-  const favLabel = isFav ? "Saved" : "Save";
   const saving = it.savedPct != null ? `<span class="fg-r-badge save">−${it.savedPct}%</span>` : "";
   const ver = it.version ? `<span class="fg-r-badge ver">${escapeHtml(it.version)}</span>` : "";
   const latest = it.isLatest ? `<span class="fg-r-badge new">NEW</span>` : "";
@@ -184,7 +199,7 @@ function cardHtml(it) {
       <div class="fg-r-cover">
         ${it.cover ? `<img loading="lazy" src="${escapeHtml(it.cover)}" alt="${escapeHtml(it.name)}" />` : `<div class="fg-r-nocover">FG</div>`}
         <div class="fg-r-badges">${latest}${ver}${saving}</div>
-        <button class="fg-r-fav ${isFav ? "on" : ""}" data-act="fav" title="${isFav ? "Remove from saved" : "Save this repack"}" aria-pressed="${isFav}">${favLabel}</button>
+        <button class="fg-r-fav ${isFav ? "on" : ""}" data-act="fav" title="${isFav ? "Remove from saved" : "Save this repack"}" aria-label="${isFav ? "Saved — click to remove" : "Save this repack"}" aria-pressed="${isFav}">${fgIcon("bookmark")}</button>
       </div>
       <div class="fg-r-body">
         <div class="fg-r-cat">${escapeHtml(it.cat)}${it.dateShort ? ` · ${escapeHtml(it.dateShort)}` : ""}</div>
@@ -194,8 +209,8 @@ function cardHtml(it) {
         <p class="fg-r-desc">${escapeHtml(it.desc || "No description parsed from original post.")}</p>
         <div class="fg-r-actions">
           <button data-act="open">Details</button>
-          <a href="${escapeHtml(it.url)}" target="_blank" rel="noopener" class="fg-r-link">Open post</a>
-          ${it.magnets[0] ? `<button data-act="magnet" title="Copy first magnet link">Copy magnet</button>` : ""}
+          ${it.magnets[0] ? `<button data-act="magnet" title="Copy first magnet link">${fgIcon("copy")}Copy magnet</button>` : ""}
+          <a href="${escapeHtml(it.url)}" target="_blank" rel="noopener" class="fg-r-link">Open post${fgIcon("external")}</a>
         </div>
       </div>
     </article>`;

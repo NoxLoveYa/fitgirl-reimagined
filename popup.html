@@ -3,47 +3,94 @@
 <head>
 <meta charset="utf-8" />
 <style>
-  :root { color-scheme: light dark; }
+  :root {
+    color-scheme: light dark;
+    --accent: #4f46e5;
+    --fill: color-mix(in srgb, CanvasText 6%, transparent);
+    --line: color-mix(in srgb, CanvasText 12%, transparent);
+    --muted: color-mix(in srgb, CanvasText 65%, Canvas);
+  }
+  * { box-sizing: border-box; }
   body {
-    width: 300px; margin: 0; padding: 16px;
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, system-ui, sans-serif;
+    width: 320px; margin: 0; padding: 16px;
+    font: 13px/1.5 Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
     background: Canvas; color: CanvasText;
   }
-  h1 { font-size: 17px; font-weight: 700; letter-spacing: -.2px; margin: 0 0 4px; }
-  h1 span { color: AccentColor; }
-  p { font-size: 13px; line-height: 1.5; opacity: .75; }
-  button, a.btn {
-    display: block; width: 100%; box-sizing: border-box; margin-top: 8px; padding: 0 12px; min-height: 40px;
-    line-height: 40px; border-radius: 10px; border: 0;
-    background: GrayText; background: color-mix(in srgb, GrayText 16%, transparent);
-    color: CanvasText; cursor: pointer; text-align: center; text-decoration: none;
-    font-size: 13px; font-weight: 600; font-family: inherit;
+  header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .logo {
+    width: 36px; height: 36px; border-radius: 9px; display: grid; place-items: center;
+    background: linear-gradient(135deg, #6366f1, #4338ca); color: #fff; font-weight: 800; font-size: 13px;
   }
-  button.primary { background: AccentColor; color: white; }
-  .row { display: flex; gap: 8px; margin-top: 8px; }
-  .row > * { flex: 1; margin-top: 0; }
-  .row button.on { background: AccentColor; color: white; }
-  .label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; opacity: .6; margin: 12px 0 0; }
-  small { opacity: .6; }
+  h1 { font-size: 15px; font-weight: 650; margin: 0; line-height: 1.2; }
+  .sub { color: var(--muted); font-size: 12px; margin: 0; }
+  .card {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 12px; border: 1px solid var(--line); border-radius: 10px; margin-bottom: 16px;
+  }
+  .card b { display: block; font-weight: 600; }
+  .card small { color: var(--muted); }
+  .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--muted); margin-right: 6px; }
+  .on-state .dot { background: #22c55e; }
+  .switch {
+    position: relative; width: 40px; height: 24px; flex-shrink: 0; padding: 0;
+    border: 0; border-radius: 999px; background: var(--line); cursor: pointer; transition: background .15s;
+  }
+  .switch::after {
+    content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px;
+    border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.3); transition: transform .15s;
+  }
+  .switch[aria-checked="true"] { background: var(--accent); }
+  .switch[aria-checked="true"]::after { transform: translateX(16px); }
+  .label { font-size: 11px; font-weight: 650; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 6px; }
+  .seg { display: flex; gap: 2px; padding: 3px; margin-bottom: 16px; background: var(--fill); border: 1px solid var(--line); border-radius: 10px; }
+  .seg button {
+    flex: 1; height: 30px; border: 0; border-radius: 7px; background: transparent; color: var(--muted);
+    font: inherit; font-weight: 500; cursor: pointer;
+  }
+  .seg button:hover { color: CanvasText; }
+  .seg button.on { background: Canvas; color: CanvasText; box-shadow: 0 1px 3px rgba(0,0,0,.25); }
+  .link {
+    display: flex; align-items: center; justify-content: center; height: 36px;
+    border-radius: 8px; background: var(--accent); color: #fff; text-decoration: none; font-weight: 600;
+  }
+  .link:hover { filter: brightness(1.1); }
+  .tip { color: var(--muted); font-size: 12px; margin: 12px 0 0; text-align: center; }
+  kbd { border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; font: inherit; font-weight: 600; }
+  button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 </style>
 </head>
 <body>
-  <h1>FitGirl <span>Reimagined</span></h1>
-  <p>Clean overlay for fitgirl-repacks.site. Toggle, search with <b>/</b>, filter by genre, copy magnets.</p>
-  <button id="toggle" class="primary">Toggle overlay</button>
+  <header>
+    <div class="logo">FG</div>
+    <div>
+      <h1>FitGirl Reimagined</h1>
+      <p class="sub">Modern overlay for fitgirl-repacks.site</p>
+    </div>
+  </header>
+
+  <div class="card" id="card">
+    <div>
+      <b>Overlay</b>
+      <small><span class="dot"></span><span id="status"></span></small>
+    </div>
+    <button id="toggle" class="switch" role="switch" aria-checked="true" aria-label="Enable overlay"></button>
+  </div>
+
   <p class="label">Layout</p>
-  <div class="row">
+  <div class="seg" role="group" aria-label="Layout">
     <button id="grid">Grid</button>
     <button id="list">List</button>
   </div>
+
   <p class="label">Appearance</p>
-  <div class="row">
+  <div class="seg" role="group" aria-label="Appearance">
     <button data-theme-opt="system">Auto</button>
     <button data-theme-opt="light">Light</button>
     <button data-theme-opt="dark">Dark</button>
   </div>
-  <a class="btn" href="https://fitgirl-repacks.site/" target="_blank">Open FitGirl</a>
-  <p><small id="status"></small></p>
+
+  <a class="link" href="https://fitgirl-repacks.site/" target="_blank" rel="noopener">Open FitGirl</a>
+  <p class="tip">Press <kbd>/</kbd> on the site to search</p>
   <script src="popup.js"></script>
 </body>
 </html>

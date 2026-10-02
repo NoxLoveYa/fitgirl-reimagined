@@ -1,6 +1,8 @@
 function sync(state) {
-  const s = document.getElementById("status");
-  if (s) s.textContent = state.fg_enabled === false ? "Overlay is off" : "Overlay is on";
+  const on = state.fg_enabled !== false;
+  document.getElementById("status").textContent = on ? "Active on fitgirl-repacks.site" : "Showing the original site";
+  document.getElementById("card").classList.toggle("on-state", on);
+  document.getElementById("toggle").setAttribute("aria-checked", String(on));
   document.getElementById("grid")?.classList.toggle("on", (state.fg_view || "grid") === "grid");
   document.getElementById("list")?.classList.toggle("on", state.fg_view === "list");
   const theme = state.fg_theme || "system";

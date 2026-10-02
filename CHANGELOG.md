@@ -3,6 +3,19 @@
 All notable changes to FitGirl Reimagined, newest first.
 Versioning: patch per user-visible change (see RULES.md R15).
 
+## [0.7.0] — Modern redesign
+- New neutral zinc + indigo theme replacing the Apple HIG look (see DESIGN.md).
+- Header: full-width sticky bar with brand, search and icon controls; genre /
+  sort moved to their own filter row beside the result count.
+- Pagination: Newer / Older links parsed from the site's own pager, so you
+  can browse past the first page of repacks.
+- Cards: icon save button (filled when saved), 16:10 covers with hover zoom,
+  Copy-magnet and Open-post icons; Saved button shows a live count.
+- Details sheet: blurred backdrop, icon close button, `role="dialog"`, focus
+  moves to Close on open.
+- Popup: on/off switch with status, segmented Layout / Appearance controls.
+- No storage keys changed — saved repacks and prefs carry over.
+
 ## [0.6.0] — Code audit + modules
 - Split the 735-line `content.js` monolith into ordered `js/` modules
   (config, util, parse, store, dropdown, theme, shell, render, sheet, main).
