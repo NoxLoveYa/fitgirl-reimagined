@@ -40,6 +40,10 @@ const FG_RE = {
   upcomingTitle: /UPCOMING REPACKS/i,
   upcomingBullet: /^[⇢→>]/,
   torrentHost: /1337x|rutor|tapochek|cs\.rin/i,
+  /** Month archive page path: /2026/09/ or /2026/09/page/3/ */
+  archive: /^\/(\d{4})\/(\d{2})\/(?:page\/\d+\/?)?$/,
+  /** Month link in the Monthly Archives widget. */
+  archiveLink: /\/(\d{4})\/(\d{2})\/?$/,
   /** Cuts a tag list off before the next spec field (some posts omit line breaks). */
   nextSpecField: /Company:|Languages:|Original Size:|Repack Size:/,
 };

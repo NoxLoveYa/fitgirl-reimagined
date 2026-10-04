@@ -49,6 +49,10 @@ function injectShell() {
         </div>
       </header>
       <div class="fg-r-filters">
+        <div class="fg-r-dd" id="fg-r-month-dd" hidden>
+          <button class="fg-r-dd-btn" id="fg-r-month-btn" aria-haspopup="listbox" aria-expanded="false" title="Browse a month of the archive"><span>Latest posts</span></button>
+          <div class="fg-r-dd-list" id="fg-r-month-list" role="listbox" aria-label="Archive month" hidden></div>
+        </div>
         <div class="fg-r-dd" id="fg-r-genre-dd">
           <button class="fg-r-dd-btn" id="fg-r-genre-btn" aria-haspopup="listbox" aria-expanded="false" title="Filter by genre/tag"><span>All genres</span></button>
           <div class="fg-r-dd-list" id="fg-r-genre-list" role="listbox" aria-label="Filter by genre" hidden></div>
@@ -88,6 +92,14 @@ function injectShell() {
     () => state.genre,
     (v) => { state.genre = v; render(); }
   );
+  // picking a month loads that archive page (the overlay re-boots on it)
+  initDropdown(
+    "fg-r-month",
+    [{ value: "latest", label: "Latest posts" }, ...state.archives.map((a) => ({ value: a.key, label: a.count ? `${a.label} · ${a.count}` : a.label }))],
+    () => state.month,
+    (v) => { location.href = v === "latest" ? FG_HOME_URL : state.archives.find((a) => a.key === v)?.url || FG_HOME_URL; }
+  );
+  root.querySelector("#fg-r-month-dd").hidden = !state.archives.length;
   initDropdown("fg-r-sort", FG_SORT_OPTS, () => state.sort, (v) => { state.sort = v; render(); });
 
   searchInput.addEventListener("input", () => {

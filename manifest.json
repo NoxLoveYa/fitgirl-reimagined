@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "FitGirl Reimagined",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Modern, user-friendly front-end overlay for fitgirl-repacks.site — grid, popular rail, instant search, size insights.",
   "permissions": ["storage"],
   "host_permissions": ["https://fitgirl-repacks.site/*"],

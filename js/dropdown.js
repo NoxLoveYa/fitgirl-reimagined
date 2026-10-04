@@ -60,6 +60,11 @@ function syncDropdowns() {
   if (gb) gb.textContent = state.genre === "all" ? "All genres" : state.genre;
   const sb = root.querySelector("#fg-r-sort-btn span");
   if (sb) sb.textContent = sortLabel(state.sort);
+  const mb = root.querySelector("#fg-r-month-btn span");
+  if (mb) mb.textContent = state.siteQuery ? "All months" : state.archives.find((a) => a.key === state.month)?.label || "Latest posts";
+  root.querySelectorAll("#fg-r-month-list [role=option]").forEach((o) => {
+    o.setAttribute("aria-selected", String(o.dataset.value === state.month));
+  });
   root.querySelectorAll("#fg-r-genre-list [role=option]").forEach((o) => {
     o.setAttribute("aria-selected", String(o.dataset.value === state.genre));
   });

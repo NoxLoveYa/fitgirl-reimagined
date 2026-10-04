@@ -189,6 +189,7 @@ body.fg-r-hide-orig.fg-r-light { background: #f6f6f8 !important; }
 #fg-r-root[data-theme="light"] .fg-r-dd-btn {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2352525b' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
+#fg-r-month-btn::before { content: "Month: "; color: var(--fg-label-2); font-weight: 400; }
 #fg-r-sort-btn::before { content: "Sort: "; color: var(--fg-label-2); font-weight: 400; }
 .fg-r-dd-btn:hover, .fg-r-dd-btn[aria-expanded="true"] { border-color: var(--fg-border-strong); background-color: var(--fg-fill); }
 .fg-r-dd-list {

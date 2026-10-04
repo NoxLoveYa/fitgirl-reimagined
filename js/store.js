@@ -20,6 +20,8 @@
  * @property {string[]} upcoming
  * @property {import("./parse.js").PopularEntry[]} popular
  * @property {{prev: string, next: string, page: string}} pager
+ * @property {{key: string, label: string, url: string, count: string}[]} archives  newest first
+ * @property {string} month  "YYYY/MM" of the archive being viewed, else "latest"
  * @property {string} siteQuery
  * @property {string[]} allGenres
  */
@@ -41,6 +43,8 @@ function createState() {
     upcoming: [],
     popular: [],
     pager: { prev: "", next: "", page: "" },
+    archives: [],
+    month: "latest",
     siteQuery: "",
     allGenres: [],
   };

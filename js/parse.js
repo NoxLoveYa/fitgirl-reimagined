@@ -223,3 +223,25 @@ function parsePager() {
     return { prev: "", next: "", page: "" };
   }
 }
+
+/**
+ * Months from the "Monthly Archives" widget, newest first (never throws).
+ * @returns {{key: string, label: string, url: string, count: string}[]}
+ */
+function parseArchives() {
+  try {
+    return [...document.querySelectorAll(".widget_archive li")].map((li) => {
+      const a = li.querySelector("a");
+      const m = a?.href.match(FG_RE.archiveLink);
+      if (!m) return null;
+      return {
+        key: `${m[1]}/${m[2]}`,
+        label: a.textContent.trim(),
+        url: a.href,
+        count: (li.textContent.match(/\(([\d,]+)\)/) || [])[1] || "",
+      };
+    }).filter(Boolean);
+  } catch {
+    return [];
+  }
+}

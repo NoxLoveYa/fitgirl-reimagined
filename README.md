@@ -17,6 +17,7 @@ no dependencies.
 - **Upcoming digest** as an honest numbered text list with copy-to-clipboard
 - **Details sheet** per repack: specs, magnet copy buttons, torrent pages
 - **Auto / Light / Dark** themes ([DESIGN.md](DESIGN.md))
+- **Month picker** for the archive; the pager rolls over to the next/previous month at either end
 - **Newer / Older pagination** parsed from the site's own pager
 - **Saved list**, genre + sort dropdowns, grid/list layouts, `/` shortcut
 

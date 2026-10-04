@@ -18,6 +18,9 @@ function collect() {
   state.upcoming = parseUpcoming();
   state.popular = parsePopular();
   state.pager = parsePager();
+  state.archives = parseArchives();
+  const am = location.pathname.match(FG_RE.archive);
+  state.month = am ? `${am[1]}/${am[2]}` : "latest";
   const allGenres = new Set();
   state.items.forEach((i) => i.genres.forEach((g) => allGenres.add(g)));
   state.allGenres = [...allGenres].sort();
@@ -63,15 +66,22 @@ function render() {
 
 function renderPager() {
   const p = state.pager;
-  if (!p.prev && !p.next) { pagerEl.hidden = true; pagerEl.innerHTML = ""; return; }
-  const link = (href, side, inner) => href
-    ? `<a class="fg-r-pg" href="${escapeHtml(href)}" rel="${side}">${inner}</a>`
+  // at either end of a month, the pager rolls over to the neighbouring month
+  const i = state.archives.findIndex((a) => a.key === state.month);
+  const newer = i > 0 ? state.archives[i - 1] : null;
+  const older = i >= 0 ? state.archives[i + 1] : null;
+  const prev = p.prev ? { href: p.prev, text: "Newer" } : newer && { href: newer.url, text: newer.label };
+  const next = p.next ? { href: p.next, text: "Older" } : older && { href: older.url, text: older.label };
+  if (!prev && !next && !p.page) { pagerEl.hidden = true; pagerEl.innerHTML = ""; return; }
+  const link = (x, side, inner) => x
+    ? `<a class="fg-r-pg" href="${escapeHtml(x.href)}" rel="${side}">${inner}</a>`
     : `<span class="fg-r-pg is-off" aria-disabled="true">${inner}</span>`;
+  const cur = [p.page && `Page ${p.page}`, i >= 0 && state.archives[i].label].filter(Boolean).join(" · ");
   pagerEl.hidden = false;
   pagerEl.innerHTML =
-    link(p.prev, "prev", `${fgIcon("arrowL")}Newer`) +
-    (p.page ? `<span class="fg-r-pg-cur">Page ${escapeHtml(p.page)}</span>` : "") +
-    link(p.next, "next", `Older${fgIcon("arrowR")}`);
+    link(prev, "prev", `${fgIcon("arrowL")}${escapeHtml(prev?.text || "Newer")}`) +
+    (cur ? `<span class="fg-r-pg-cur">${escapeHtml(cur)}</span>` : "") +
+    link(next, "next", `${escapeHtml(next?.text || "Older")}${fgIcon("arrowR")}`);
 }
 
 function renderPopular() {

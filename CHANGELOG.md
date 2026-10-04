@@ -3,6 +3,14 @@
 All notable changes to FitGirl Reimagined, newest first.
 Versioning: patch per user-visible change (see RULES.md R15).
 
+## [0.7.1] — Month archive browsing
+- New **Month** dropdown in the filter row, built from the site's Monthly
+  Archives widget (newest first, with post counts). Picking one loads that
+  month; "Latest posts" returns to the homepage.
+- The pager rolls over between months: on a month's last page, **Older**
+  becomes the previous month's name; on its first page, **Newer** becomes the
+  next month's name (both open that month's first page).
+
 ## [0.7.0] — Modern redesign
 - New neutral zinc + indigo theme replacing the Apple HIG look (see DESIGN.md).
 - Header: full-width sticky bar with brand, search and icon controls; genre /
